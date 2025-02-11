@@ -7,9 +7,11 @@ from ..invalidkeyexception import InvalidKeyException
 
 import axolotl_curve25519 as _curve
 
+# -*- coding: utf-8 -*-
 
 class Curve:
     DJB_TYPE = 5
+
     # always DJB curve25519 keys
 
     @staticmethod
@@ -39,7 +41,7 @@ class Curve:
             type = _bytes[offset] & 0xFF
             if type != Curve.DJB_TYPE:
                 raise InvalidKeyException("Unknown key type: %s " % type)
-            keyBytes = _bytes[offset+1:][:32]
+            keyBytes = _bytes[offset + 1:][:32]
             return DjbECPublicKey(bytes(keyBytes))
         else:
             raise InvalidKeyException("Unknown key type: %s" % type)

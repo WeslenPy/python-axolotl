@@ -1,20 +1,12 @@
 # -*- coding: utf-8 -*-
-
-from .state.storageprotos_pb2 import IdentityKeyPairStructure
+from .ecc.djbec import DjbECPrivateKey, DjbECPublicKey
 from .identitykey import IdentityKey
-from .ecc.curve import Curve
 
 
 class IdentityKeyPair:
-    def __init__(self, identityKeyPublicKey=None, ecPrivateKey=None, serialized=None):
-        if serialized:
-            structure = IdentityKeyPairStructure()
-            structure.ParseFromString(serialized)
-            self.publicKey = IdentityKey(bytearray(structure.publicKey), offset=0)
-            self.privateKey = Curve.decodePrivatePoint(bytearray(structure.privateKey))
-        else:
-            self.publicKey = identityKeyPublicKey
-            self.privateKey = ecPrivateKey
+    def __init__(self, identityKeyPublicKey=None, ecPrivateKey=None):
+        self.publicKey = identityKeyPublicKey
+        self.privateKey = ecPrivateKey
 
     def getPublicKey(self):
         return self.publicKey
@@ -22,8 +14,6 @@ class IdentityKeyPair:
     def getPrivateKey(self):
         return self.privateKey
 
-    def serialize(self):
-        structure = IdentityKeyPairStructure()
-        structure.publicKey = self.publicKey.serialize()
-        structure.privateKey = self.privateKey.serialize()
-        return structure.SerializeToString()
+    @staticmethod
+    def of(publicKey: bytes, privateKey: bytes):
+        return IdentityKeyPair(IdentityKey(DjbECPublicKey(publicKey[1:])), DjbECPrivateKey(privateKey))
