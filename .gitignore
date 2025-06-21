@@ -7,7 +7,8 @@ ehthumbs.db
 
 # Folder config file
 Desktop.ini
-
+*.lock
+poetry.lock
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
